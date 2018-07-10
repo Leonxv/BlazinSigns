@@ -1,0 +1,13 @@
+name: BlazinSigns
+author: iiFlamiinBlaze
+version: 1.0.0
+description: An advanced sign changing plugin for PocketMine!
+api: 3.0.0
+main: iiFlamiinBlaze\BlazinSigns\BlazinSigns
+commands:
+ blazinsigns:
+  permission: blazinsigns.command
+  description: "Allows you to change the text of a sign"
+permissions:
+ blazinsigns.command:
+  default: op
