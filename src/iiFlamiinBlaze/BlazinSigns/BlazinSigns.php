@@ -32,15 +32,13 @@ use pocketmine\Player;
 
 class BlazinSigns extends PluginBase implements Listener{
 
-	private const VERSION = "v1.0.0";
-	private const PREFIX = TextFormat::GOLD . "BlazinSigns" . TextFormat::AQUA . " > ";
+	protected const VERSION = "v1.0.1";
+	protected const PREFIX = TextFormat::GOLD . "BlazinSigns" . TextFormat::AQUA . " > ";
 
-	/** @var array $initSigns */
-	private $initSigns = [];
+	/** @var array $signLines */
+	protected $signLines = [];
 	/** @var array $signText */
-	private $signText = [];
-	/** @var array $signLine */
-	private $signLine = [];
+	protected $signText = [];
 
 	public function onEnable() : void{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -63,26 +61,22 @@ class BlazinSigns extends PluginBase implements Listener{
 			}
 			switch($args[0]){
 				case "1":
-					$this->initSigns[] = $sender->getName();
-					$this->signLine[$sender->getName()] = 0;
+					$this->signLines[$sender->getName()] = 0;
 					$this->signText[$sender->getName()] = implode(" ", array_slice($args, 1));
 					$sender->sendMessage(self::PREFIX . TextFormat::GREEN . "Tap a sign now to change the first line of text");
 					break;
 				case "2":
-					$this->initSigns[] = $sender->getName();
-					$this->signLine[$sender->getName()] = 1;
+					$this->signLines[$sender->getName()] = 1;
 					$this->signText[$sender->getName()] = implode(" ", array_slice($args, 1));
 					$sender->sendMessage(self::PREFIX . TextFormat::GREEN . "Tap a sign now to change the second line of text");
 					break;
 				case "3":
-					$this->initSigns[] = $sender->getName();
-					$this->signLine[$sender->getName()] = 2;
+					$this->signLines[$sender->getName()] = 2;
 					$this->signText[$sender->getName()] = implode(" ", array_slice($args, 1));
 					$sender->sendMessage(self::PREFIX . TextFormat::GREEN . "Tap a sign now to change the third line of text");
 					break;
 				case "4":
-					$this->initSigns[] = $sender->getName();
-					$this->signLine[$sender->getName()] = 3;
+					$this->signLines[$sender->getName()] = 3;
 					$this->signText[$sender->getName()] = implode(" ", array_slice($args, 1));
 					$sender->sendMessage(self::PREFIX . TextFormat::GREEN . "Tap a sign now to change the fourth line of text");
 					break;
@@ -98,11 +92,10 @@ class BlazinSigns extends PluginBase implements Listener{
 		$player = $event->getPlayer();
 		$tile = $event->getPlayer()->getLevel()->getTile($event->getBlock());
 		if($tile instanceof Sign){
-			if(in_array($player->getName(), $this->initSigns)){
-				$tile->setLine($this->signLine[$player->getName()], $this->signText[$player->getName()]);
-				$player->sendMessage(self::PREFIX . TextFormat::GREEN . "You have successfully set line #" . strval($this->signLine[$player->getName()] + 1) . " of this sign");
-				unset($this->initSigns[array_search($player->getName(), $this->initSigns)]);
-				unset($this->signLine[$player->getName()]);
+			if(isset($this->signLines[$player->getName()]) && isset($this->signText[$player->getName()])){
+				$tile->setLine($this->signLines[$player->getName()], $this->signText[$player->getName()]);
+				$player->sendMessage(self::PREFIX . TextFormat::GREEN . "You have successfully set line #" . strval($this->signLines[$player->getName()] + 1) . " of this sign");
+				unset($this->signLines[$player->getName()]);
 				unset($this->signText[$player->getName()]);
 			}
 		}
